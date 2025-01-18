@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -34,6 +36,11 @@ android {
 dependencies {
     implementation("com.github.yuyakaido:CardStackView:v2.3.4")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-auth")
 
     implementation("com.github.bumptech.glide:glide:4.13.2")
 
