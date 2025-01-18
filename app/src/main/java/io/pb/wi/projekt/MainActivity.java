@@ -1,5 +1,6 @@
 package io.pb.wi.projekt;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -30,14 +39,18 @@ import com.yuyakaido.android.cardstackview.SwipeableMethod;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.pb.wi.projekt.adapter.CardStackAdapter;
+import io.pb.wi.projekt.adapter.UserStackAdapter;
 
 public class MainActivity extends AppCompatActivity implements CardStackListener {
 
     private DrawerLayout drawerLayout;
     private CardStackView cardStackView;
     private CardStackLayoutManager manager;
-    private CardStackAdapter adapter;
+    private UserStackAdapter adapter;
+
+    private DatabaseReference usersDb;
+    private FirebaseAuth mAuth;
+    private String currentUId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +60,16 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
         drawerLayout = findViewById(R.id.drawer_layout);
         cardStackView = findViewById(R.id.card_stack_view);
         manager = new CardStackLayoutManager(this, this);
-        adapter = new CardStackAdapter(createSpots());
+        adapter = new UserStackAdapter(createUsers());
+        mAuth = FirebaseAuth.getInstance();
+        currentUId = mAuth.getCurrentUser().getUid();
 
+        usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        checkUserSex();
         setupNavigation();
         setupCardStackView();
         setupButton();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawers();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -109,25 +118,85 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             int itemId = menuItem.getItemId();
-
-            if (itemId == R.id.reload) {
-                reload();
-            } else if (itemId == R.id.add_spot_to_first) {
-                addFirst(1);
-            } else if (itemId == R.id.add_spot_to_last) {
-                addLast(1);
-            } else if (itemId == R.id.remove_spot_from_first) {
-                removeFirst(1);
-            } else if (itemId == R.id.remove_spot_from_last) {
-                removeLast(1);
-            } else if (itemId == R.id.replace_first_spot) {
-                replace();
-            } else if (itemId == R.id.swap_first_for_last) {
-                swap();
+                if (itemId == R.id.logout) {
+                logout();
             }
-
             drawerLayout.closeDrawers();
             return true;
+        });
+    }
+
+    private void logout() {
+        mAuth.signOut();
+        Intent intent = new Intent(MainActivity.this, LoginRegistrationActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private String userSex;
+    private String oppositeUserSex;
+
+    public void checkUserSex() {
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference userDb = usersDb.child(user.getUid());
+        userDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.child("sex").getValue() != null) {
+                        userSex = dataSnapshot.child("sex").getValue().toString();
+                        switch (userSex) {
+                            case "Male":
+                                oppositeUserSex = "Female";
+                                break;
+                            case "Female":
+                                oppositeUserSex = "Male";
+                                break;
+                        }
+                        getOppositeSexUsers();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void getOppositeSexUsers() {
+        usersDb.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.child("sex").getValue() != null) {
+                    if (dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId) &&
+                            !dataSnapshot.child("connections").child("yeps").hasChild(currentUId) &&
+                            dataSnapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
+                        String profileImageUrl = "default";
+                        if (!dataSnapshot.child("profileImageUrl").getValue().equals("default")) {
+                            profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+                        }
+//                        User user = new User(dataSnapshot.getKey(), dataSnapshot.child("name").getValue().toString(), profileImageUrl, dataSnapshot.child("sex").getValue().toString());
+                        System.out.println( dataSnapshot.child("name").getValue().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
@@ -190,116 +259,26 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
     }
 
     private void paginate() {
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = new ArrayList<>(old);
-        newSpots.addAll(createSpots());
-        SpotDiffCallback callback = new SpotDiffCallback(old, newSpots);
+        List<User> old = adapter.getUsers();
+        List<User> newUsers = new ArrayList<>(old);
+        newUsers.addAll(createUsers());
+        UserDiffCallback callback = new UserDiffCallback(old, newUsers);
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setSpots(newSpots);
+        adapter.setUsers(newUsers);
         result.dispatchUpdatesTo(adapter);
     }
 
-    private void reload() {
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = createSpots();
-        SpotDiffCallback callback = new SpotDiffCallback(old, newSpots);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setSpots(newSpots);
-        result.dispatchUpdatesTo(adapter);
+    private User createUser() {
+        return new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg");
     }
 
-    private void addFirst(int size) {
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = new ArrayList<>(old);
-        for (int i = 0; i < size; i++) {
-            newSpots.add(manager.getTopPosition(), createSpot());
-        }
-        SpotDiffCallback callback = new SpotDiffCallback(old, newSpots);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setSpots(newSpots);
-        result.dispatchUpdatesTo(adapter);
-    }
-
-    private void addLast(int size) {
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = new ArrayList<>(old);
-        for (int i = 0; i < size; i++) {
-            newSpots.add(createSpot());
-        }
-        SpotDiffCallback callback = new SpotDiffCallback(old, newSpots);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setSpots(newSpots);
-        result.dispatchUpdatesTo(adapter);
-    }
-
-    private void removeFirst(int size) {
-        if (adapter.getSpots().isEmpty()) {
-            return;
-        }
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = new ArrayList<>(old);
-        for (int i = 0; i < size; i++) {
-            newSpots.remove(manager.getTopPosition());
-        }
-        SpotDiffCallback callback = new SpotDiffCallback(old, newSpots);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setSpots(newSpots);
-        result.dispatchUpdatesTo(adapter);
-    }
-
-    private void removeLast(int size) {
-        if (adapter.getSpots().isEmpty()) {
-            return;
-        }
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = new ArrayList<>(old);
-        for (int i = 0; i < size; i++) {
-            newSpots.remove(newSpots.size() - 1);
-        }
-        SpotDiffCallback callback = new SpotDiffCallback(old, newSpots);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setSpots(newSpots);
-        result.dispatchUpdatesTo(adapter);
-    }
-
-    private void replace() {
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = new ArrayList<>(old);
-        newSpots.remove(manager.getTopPosition());
-        newSpots.add(manager.getTopPosition(), createSpot());
-        adapter.setSpots(newSpots);
-        adapter.notifyItemChanged(manager.getTopPosition());
-    }
-
-    private void swap() {
-        List<Spot> old = adapter.getSpots();
-        List<Spot> newSpots = new ArrayList<>(old);
-        Spot first = newSpots.remove(manager.getTopPosition());
-        Spot last = newSpots.remove(newSpots.size() - 1);
-        newSpots.add(manager.getTopPosition(), last);
-        newSpots.add(first);
-        SpotDiffCallback callback = new SpotDiffCallback(old, newSpots);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setSpots(newSpots);
-        result.dispatchUpdatesTo(adapter);
-    }
-
-    private Spot createSpot() {
-        return new Spot("Yasaka Shrine", "Kyoto", "https://source.unsplash.com/Xq1ntWruZQI/600x800");
-    }
-
-    private List<Spot> createSpots() {
-        List<Spot> spots = new ArrayList<>();
-        spots.add(new Spot("Yasaka Shrine", "Kyoto", "https://summoning.ru/images/notes/kyoto/79.jpg"));
-        spots.add(new Spot("Fushimi Inari Shrine", "Kyoto", "https://source.unsplash.com/NYyCqdBOKwc/600x800"));
-        spots.add(new Spot("Bamboo Forest", "Kyoto", "https://source.unsplash.com/buF62ewDLcQ/600x800"));
-        spots.add(new Spot("Brooklyn Bridge", "New York", "https://source.unsplash.com/THozNzxEP3g/600x800"));
-        spots.add(new Spot("Empire State Building", "New York", "https://source.unsplash.com/USrZRcRS2Lw/600x800"));
-        spots.add(new Spot("The Statue of Liberty", "New York", "https://source.unsplash.com/PeFk7fzxTdk/600x800"));
-        spots.add(new Spot("Louvre Museum", "Paris", "https://source.unsplash.com/LrMWHKqilUw/600x800"));
-        spots.add(new Spot("Eiffel Tower", "Paris", "https://source.unsplash.com/HN-5Z6AmxrM/600x800"));
-        spots.add(new Spot("Big Ben", "London", "https://source.unsplash.com/CdVAUADdqEc/600x800"));
-        spots.add(new Spot("Great Wall of China", "China", "https://source.unsplash.com/AWh9C-QjhE4/600x800"));
-        return spots;
+    private List<User> createUsers() {
+        List<User> users = new ArrayList<>();
+        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
+        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
+        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
+        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
+        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
+        return users;
     }
 }

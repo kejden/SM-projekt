@@ -37,4 +37,14 @@
         android:title="@string/swap_first_for_last"
         />
 
+    <item
+        android:id="@+id/space"
+        android:title=" "
+        android:enabled="false"
+        android:visible="true" />
+
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout"
+        android:visible="true" />
 </menu>
