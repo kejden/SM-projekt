@@ -13,17 +13,14 @@
         android:theme="@style/Theme.Projekt"
         tools:targetApi="31">
 
-        <!-- Login Activity -->
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
 
-        <!-- Registration Activity -->
         <activity
             android:name=".RegistrationActivity"
             android:exported="true" />
 
-        <!-- Login Registration Activity -->
         <activity
             android:name=".LoginRegistrationActivity"
             android:exported="true">
@@ -33,10 +30,11 @@
             </intent-filter>
         </activity>
 
-        <!-- Main Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".EditProfileActivity" />
     </application>
 
 </manifest>

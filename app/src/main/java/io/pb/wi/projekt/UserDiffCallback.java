@@ -4,33 +4,37 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.DiffUtil;
+
+import java.util.List;
+
 public class UserDiffCallback extends DiffUtil.Callback {
 
-    private final List<User> oldList;
-    private final List<User> newList;
+    private final List<User> oldUsers;
+    private final List<User> newUsers;
 
-    public UserDiffCallback(List<User> oldList, List<User> newList) {
-        this.oldList = oldList;
-        this.newList = newList;
+    public UserDiffCallback(List<User> oldUsers, List<User> newUsers) {
+        this.oldUsers = oldUsers;
+        this.newUsers = newUsers;
     }
 
     @Override
     public int getOldListSize() {
-        return oldList.size();
+        return oldUsers.size();
     }
 
     @Override
     public int getNewListSize() {
-        return newList.size();
+        return newUsers.size();
     }
 
     @Override
-    public boolean areItemsTheSame(int oldPosition, int newPosition) {
-        return oldList.get(oldPosition).getId() == newList.get(newPosition).getId();
+    public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+        return oldUsers.get(oldItemPosition).getId() == newUsers.get(newItemPosition).getId();
     }
 
     @Override
-    public boolean areContentsTheSame(int oldPosition, int newPosition) {
-        return oldList.get(oldPosition).equals(newList.get(newPosition));
+    public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+        return oldUsers.get(oldItemPosition).equals(newUsers.get(newItemPosition));
     }
 }

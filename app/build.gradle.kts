@@ -41,8 +41,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-storage")
 
     implementation("com.github.bumptech.glide:glide:4.13.2")
+    implementation("com.squareup.picasso:picasso:2.8")
 
     implementation(libs.appcompat)
     implementation(libs.material)

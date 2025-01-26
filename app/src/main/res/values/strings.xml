@@ -15,4 +15,5 @@
     <string name="replace_first_spot">Replace first spot</string>
     <string name="swap_first_for_last">Swap first for last</string>
     <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
 </resources>

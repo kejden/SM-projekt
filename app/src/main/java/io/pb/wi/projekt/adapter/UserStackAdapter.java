@@ -5,14 +5,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.pb.wi.projekt.R;
@@ -23,28 +21,37 @@ public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.View
     private List<User> users;
 
     public UserStackAdapter(List<User> users) {
-        this.users = users != null ? users : new ArrayList<>();
+        this.users = users;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.item_user, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = users.get(position);
-        holder.name.setText(user.getName() + ", " + user.getAge());
+        holder.name.setText(user.getName());
         holder.location.setText(user.getLocation());
-        Glide.with(holder.image.getContext())
-                .load(user.getProfileUrl())
-                .into(holder.image);
-        holder.itemView.setOnClickListener(v ->
-                Toast.makeText(v.getContext(), "You clicked on " + user.getName(), Toast.LENGTH_SHORT).show()
-        );
+        Picasso.get().load(user.getProfileUrl()).into(holder.image);
+
+        holder.image.setOnClickListener(v -> {
+            // Przejdź do następnego zdjęcia lub wróć do poprzedniego
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition != RecyclerView.NO_POSITION) {
+                // Przykład: Przejdź do następnego zdjęcia
+                int nextPosition = currentPosition + 1;
+                if (nextPosition < users.size()) {
+                    User nextUser = users.get(nextPosition);
+                    Picasso.get().load(nextUser.getProfileUrl()).into(holder.image);
+                    holder.name.setText(nextUser.getName());
+                    holder.location.setText(nextUser.getLocation());
+                }
+            }
+        });
     }
 
     @Override
@@ -52,24 +59,29 @@ public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.View
         return users.size();
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users != null ? users : new ArrayList<>();
+    public void addUser(User user) {
+        users.add(user);
+        notifyDataSetChanged();
     }
 
     public List<User> getUsers() {
         return users;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView location;
-        ImageView image;
+    public void setUsers(List<User> users) {
+        this.users = users;
+        notifyDataSetChanged();
+    }
 
-        public ViewHolder(@NonNull View view) {
-            super(view);
-            name = view.findViewById(R.id.item_name);
-            location = view.findViewById(R.id.item_city);
-            image = view.findViewById(R.id.item_image);
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public ImageView image;
+        public TextView name, location;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            image = itemView.findViewById(R.id.item_image);
+            name = itemView.findViewById(R.id.item_name);
+            location = itemView.findViewById(R.id.item_city);
         }
     }
 }

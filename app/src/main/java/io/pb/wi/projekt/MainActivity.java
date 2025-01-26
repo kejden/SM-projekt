@@ -118,8 +118,11 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             int itemId = menuItem.getItemId();
-                if (itemId == R.id.logout) {
+            if (itemId == R.id.logout) {
                 logout();
+            } else if (itemId == R.id.profile) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
             }
             drawerLayout.closeDrawers();
             return true;
