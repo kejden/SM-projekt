@@ -37,6 +37,7 @@ import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.pb.wi.projekt.adapter.UserStackAdapter;
@@ -271,17 +272,15 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
         result.dispatchUpdatesTo(adapter);
     }
 
-    private User createUser() {
-        return new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg");
-    }
-
     private List<User> createUsers() {
         List<User> users = new ArrayList<>();
-        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
-        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
-        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
-        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
-        users.add(new User( "John Doe", 32, "Bialystok","https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg"));
+        users.add(new User("John Doe", 32, "Białystok", Arrays.asList(
+                "https://render.fineartamerica.com/images/rendered/default/poster/7.5/10/break/images/artworkimages/medium/3/2021-person-of-the-year-elon-musk-photograph-by-mark-mahaney-for-time.jpg",
+                "https://engineering.unl.edu/images/staff/Kayla-Person.jpg",
+                "https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg",
+                "https://bynamesakke.com/wp-content/uploads/2023/10/By-Name-Sakke-AW-2314783-600x800.jpg"
+        )));
+        // Dodaj więcej użytkowników według potrzeb
         return users;
     }
 }

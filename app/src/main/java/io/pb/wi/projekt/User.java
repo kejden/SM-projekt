@@ -1,23 +1,29 @@
 package io.pb.wi.projekt;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class User {
-
     private static final AtomicLong counter = new AtomicLong(0);
 
     private final long id;
     private final String name;
     private final int age;
     private final String location;
-    private final String profileUrl;
+    private final List<String> profileUrls;
 
-    public User(String name, int age, String location, String profileUrl) {
+    public User(String name, int age, String location, List<String> profileUrls) {
         this.id = counter.getAndIncrement();
         this.name = name;
         this.age = age;
         this.location = location;
-        this.profileUrl = profileUrl;
+        this.profileUrls = profileUrls;
+    }
+
+    // Gettery
+    public List<String> getProfileUrls() {
+        return profileUrls;
     }
 
     public long getId() {
@@ -36,32 +42,22 @@ public class User {
         return location;
     }
 
-    public String getProfileUrl() {
-        return profileUrl;
-    }
-
+    // Reszta metod pozostaje bez zmian (uwzględnij zmiany w equals/hashCode/toString)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         User user = (User) o;
-
-        if (id != user.id) return false;
-        if (age != user.age) return false;
-        if (!name.equals(user.name)) return false;
-        if (!location.equals(user.location)) return false;
-        return profileUrl.equals(user.profileUrl);
+        return id == user.id &&
+                age == user.age &&
+                name.equals(user.name) &&
+                location.equals(user.location) &&
+                profileUrls.equals(user.profileUrls);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + name.hashCode();
-        result = 31 * result + age;
-        result = 31 * result + location.hashCode();
-        result = 31 * result + profileUrl.hashCode();
-        return result;
+        return Objects.hash(id, name, age, location, profileUrls);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", location='" + location + '\'' +
-                ", profileUrl='" + profileUrl + '\'' +
+                ", profileUrls=" + profileUrls +
                 '}';
     }
 }
