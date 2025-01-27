@@ -37,7 +37,6 @@ import com.yuyakaido.android.cardstackview.SwipeAnimationSetting;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.pb.wi.projekt.adapter.UserStackAdapter;
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
         drawerLayout = findViewById(R.id.drawer_layout);
         cardStackView = findViewById(R.id.card_stack_view);
         manager = new CardStackLayoutManager(this, this);
-        adapter = new UserStackAdapter(createUsers());
+        adapter = new UserStackAdapter(new ArrayList<>());
         mAuth = FirebaseAuth.getInstance();
         currentUId = mAuth.getCurrentUser().getUid();
 
@@ -173,33 +172,48 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.child("sex").getValue() != null) {
-                    if (dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId) &&
+                    if (dataSnapshot.exists() &&
+                            !dataSnapshot.child("connections").child("nope").hasChild(currentUId) &&
                             !dataSnapshot.child("connections").child("yeps").hasChild(currentUId) &&
                             dataSnapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
-                        String profileImageUrl = "default";
-                        if (!dataSnapshot.child("profileImageUrl").getValue().equals("default")) {
-                            profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+
+                        String userId = dataSnapshot.getKey();
+                        String name = dataSnapshot.child("name").getValue(String.class);
+                        Integer age = dataSnapshot.child("age").getValue(Integer.class);
+                        String location = dataSnapshot.child("location").getValue(String.class);
+
+                        List<String> profileUrls = new ArrayList<>();
+                        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                            String key = childSnapshot.getKey();
+                            if (key != null && key.startsWith("profileImageUrl")) {
+                                String photoUrl = childSnapshot.getValue(String.class);
+                                if (photoUrl != null && !photoUrl.isEmpty() && !photoUrl.equals("default")) {
+                                    profileUrls.add(photoUrl);
+                                }
+                            }
                         }
-//                        User user = new User(dataSnapshot.getKey(), dataSnapshot.child("name").getValue().toString(), profileImageUrl, dataSnapshot.child("sex").getValue().toString());
-                        System.out.println( dataSnapshot.child("name").getValue().toString());
+
+                        User user = new User(name, age, location, profileUrls);
+                        Log.d("CWELOZA", user.toString());
+                        adapter.getUsers().add(user);
+                        adapter.notifyDataSetChanged();
                     }
                 }
             }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.e("FirebaseError", "Database error: " + databaseError.getMessage());
             }
         });
     }
@@ -263,24 +277,5 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
     }
 
     private void paginate() {
-        List<User> old = adapter.getUsers();
-        List<User> newUsers = new ArrayList<>(old);
-        newUsers.addAll(createUsers());
-        UserDiffCallback callback = new UserDiffCallback(old, newUsers);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        adapter.setUsers(newUsers);
-        result.dispatchUpdatesTo(adapter);
-    }
-
-    private List<User> createUsers() {
-        List<User> users = new ArrayList<>();
-        users.add(new User("John Doe", 32, "Białystok", Arrays.asList(
-                "https://render.fineartamerica.com/images/rendered/default/poster/7.5/10/break/images/artworkimages/medium/3/2021-person-of-the-year-elon-musk-photograph-by-mark-mahaney-for-time.jpg",
-                "https://engineering.unl.edu/images/staff/Kayla-Person.jpg",
-                "https://img.freepik.com/free-photo/teenager-boy-portrait_23-2148105678.jpg",
-                "https://bynamesakke.com/wp-content/uploads/2023/10/By-Name-Sakke-AW-2314783-600x800.jpg"
-        )));
-        // Dodaj więcej użytkowników według potrzeb
-        return users;
     }
 }

@@ -20,6 +20,7 @@ import io.pb.wi.projekt.ImageAdapter;
 import io.pb.wi.projekt.R;
 import io.pb.wi.projekt.User;
 
+
 public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.ViewHolder> {
     private List<User> users;
 
@@ -57,11 +58,9 @@ public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         User user = users.get(position);
 
-        // Inicjalizacja ViewPagera
         holder.pager.setAdapter(new ImageAdapter(user.getProfileUrls()));
         setupDots(holder.dotsContainer, user.getProfileUrls().size(), holder.pager);
 
-        // Obsługa kliknięć
         holder.leftTouchArea.setOnClickListener(v -> {
             int currentItem = holder.pager.getCurrentItem();
             if (currentItem > 0) {
@@ -76,7 +75,6 @@ public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.View
             }
         });
 
-        // Ustawienie danych użytkownika
         holder.name.setText(user.getName());
         holder.location.setText(user.getLocation());
     }

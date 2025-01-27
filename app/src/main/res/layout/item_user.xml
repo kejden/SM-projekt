@@ -7,19 +7,16 @@
     app:cardCornerRadius="8dp"
     app:cardBackgroundColor="@android:color/white">
 
-    <!-- ViewPager2 do wyświetlania zdjęć -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <!-- Lewy i prawy obszar dotykowy -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <!-- Lewy obszar (cofa zdjęcie) -->
         <FrameLayout
             android:id="@+id/left_touch_area"
             android:layout_width="0dp"
@@ -29,7 +26,6 @@
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"/>
 
-        <!-- Prawy obszar (przechodzi do następnego zdjęcia) -->
         <FrameLayout
             android:id="@+id/right_touch_area"
             android:layout_width="0dp"
@@ -43,7 +39,6 @@
 
 
 
-    <!-- Informacje o użytkowniku -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

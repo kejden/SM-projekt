@@ -21,7 +21,6 @@ public class User {
         this.profileUrls = profileUrls;
     }
 
-    // Gettery
     public List<String> getProfileUrls() {
         return profileUrls;
     }
@@ -42,7 +41,6 @@ public class User {
         return location;
     }
 
-    // Reszta metod pozostaje bez zmian (uwzględnij zmiany w equals/hashCode/toString)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

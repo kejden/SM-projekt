@@ -33,7 +33,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void saveProfile() {
         String name = nameEditText.getText().toString();
-        String age = ageEditText.getText().toString();
+        Integer age = Integer.parseInt(ageEditText.getText().toString());
         String location = locationEditText.getText().toString();
 
         userDb.child("name").setValue(name);
