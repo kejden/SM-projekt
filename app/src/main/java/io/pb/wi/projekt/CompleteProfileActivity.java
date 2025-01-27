@@ -110,15 +110,13 @@ public class CompleteProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Opcjonalnie: Można tutaj dodać walidację miasta (np. sprawdzenie w API, czy miasto istnieje)
-
-        // Zapisz dane w bazie Firebase
         userDb.child("age").setValue(Integer.parseInt(age));
         userDb.child("location").setValue(city);
         userDb.child("profileCompleted").setValue(true).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(CompleteProfileActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(CompleteProfileActivity.this, MainActivity.class);
+
+                Intent intent = new Intent(CompleteProfileActivity.this, UploadPhotosActivity.class);
                 startActivity(intent);
                 finish();
             } else {
@@ -132,7 +130,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLocation(); // Ponów próbę pobrania lokalizacji po przyznaniu uprawnień
+                getLocation();
             } else {
                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
             }

@@ -1,4 +1,4 @@
-package io.pb.wi.projekt;
+package io.pb.wi.projekt.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+
+import io.pb.wi.projekt.R;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
     private List<String> imageUrls;

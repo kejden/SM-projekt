@@ -8,15 +8,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
-import io.pb.wi.projekt.ImageAdapter;
 import io.pb.wi.projekt.R;
 import io.pb.wi.projekt.User;
 
