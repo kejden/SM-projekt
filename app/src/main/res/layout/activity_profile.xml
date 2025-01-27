@@ -9,18 +9,21 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:editable="false"
         android:hint="Name" />
 
     <EditText
         android:id="@+id/age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:editable="false"
         android:hint="Age" />
 
     <EditText
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:editable="false"
         android:hint="Location" />
 
     <Button

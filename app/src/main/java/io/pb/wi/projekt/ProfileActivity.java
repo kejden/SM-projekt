@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String name = dataSnapshot.child("name").getValue(String.class);
-                    String age = dataSnapshot.child("age").getValue(String.class);
+                    int age = dataSnapshot.child("age").getValue(Integer.class);
                     String location = dataSnapshot.child("location").getValue(String.class);
 
                     EditText nameEditText = findViewById(R.id.name);
@@ -65,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
                     EditText locationEditText = findViewById(R.id.location);
 
                     nameEditText.setText(name);
-                    ageEditText.setText(age);
+                    ageEditText.setText(String.valueOf(age));
                     locationEditText.setText(location);
 
                     for (int i = 0; i < 4; i++) {

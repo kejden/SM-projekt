@@ -42,6 +42,10 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
 
     implementation("com.github.bumptech.glide:glide:4.13.2")
     implementation("com.squareup.picasso:picasso:2.8")

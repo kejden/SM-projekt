@@ -28,6 +28,7 @@ public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.View
         ViewPager2 pager;
         LinearLayout dotsContainer;
         TextView name;
+        TextView age;
         TextView location;
         FrameLayout leftTouchArea;
         FrameLayout rightTouchArea;
@@ -37,6 +38,7 @@ public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.View
             pager = view.findViewById(R.id.pager);
             dotsContainer = view.findViewById(R.id.dotsContainer);
             name = view.findViewById(R.id.item_name);
+            age = view.findViewById(R.id.item_age);
             location = view.findViewById(R.id.item_city);
             leftTouchArea = view.findViewById(R.id.left_touch_area);
             rightTouchArea = view.findViewById(R.id.right_touch_area);
@@ -76,6 +78,7 @@ public class UserStackAdapter extends RecyclerView.Adapter<UserStackAdapter.View
         });
 
         holder.name.setText(user.getName());
+        holder.age.setText(String.valueOf(user.getAge()));
         holder.location.setText(user.getLocation());
     }
 

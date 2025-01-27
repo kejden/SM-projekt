@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
                         }
 
                         User user = new User(name, age, location, profileUrls);
-                        Log.d("CWELOZA", user.toString());
                         adapter.getUsers().add(user);
                         adapter.notifyDataSetChanged();
                     }

@@ -15,6 +15,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -51,9 +56,35 @@ public class LoginActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Sign in error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            // Sprawdź, czy użytkownik ma uzupełnione dane
+                            String userId = mAuth.getCurrentUser().getUid();
+                            DatabaseReference userDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+
+                            userDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        // Sprawdź, czy użytkownik uzupełnił już profil
+                                        Boolean profileCompleted = dataSnapshot.child("profileCompleted").getValue(Boolean.class);
+                                        if (profileCompleted == null || !profileCompleted) {
+                                            // Przekieruj do aktywności uzupełnienia danych
+                                            Intent intent = new Intent(LoginActivity.this, CompleteProfileActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            // Przekieruj do głównej aktywności
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Toast.makeText(LoginActivity.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
                 });
