@@ -20,6 +20,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UploadPhotosActivity extends AppCompatActivity {
 
@@ -100,7 +101,7 @@ public class UploadPhotosActivity extends AppCompatActivity {
 
         for (int i = 0; i < imageUris.size(); i++) {
             int index = i;
-            StorageReference fileRef = storageRef.child(mAuth.getCurrentUser().getUid() + "_" + index + ".jpg");
+            StorageReference fileRef = storageRef.child(mAuth.getCurrentUser().getUid() + "_" + UUID.randomUUID().toString() + ".jpg");
             com.google.android.gms.tasks.Task<Uri> uploadTask = fileRef.putFile(imageUris.get(index))
                     .continueWithTask(task -> fileRef.getDownloadUrl());
             uploadTasks.add(uploadTask);

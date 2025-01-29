@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GalleryActivity extends AppCompatActivity {
 
@@ -234,7 +235,7 @@ public class GalleryActivity extends AppCompatActivity {
             if (uploadIndex >= MAX_IMAGES) break;
 
             Uri uri = imageUris.get(i);
-            StorageReference fileRef = storageRef.child(mAuth.getCurrentUser().getUid() + "_" + uploadIndex + ".jpg");
+            StorageReference fileRef = storageRef.child(mAuth.getCurrentUser().getUid() + "_" + UUID.randomUUID().toString() + ".jpg");
 
             fileRef.putFile(uri)
                     .addOnSuccessListener(taskSnapshot ->
