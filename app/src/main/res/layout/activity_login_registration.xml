@@ -1,31 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginRegistrationActivity"
     android:orientation="vertical"
-    android:gravity="center">
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:padding="24dp"
+    tools:context=".LoginRegistrationActivity">
+
     <Button
         android:id="@+id/login"
-        android:layout_width="match_parent"
+        android:layout_width="301dp"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:backgroundTint="@color/primary"
-        android:textColor="@android:color/white"
-        android:padding="12dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/rounded_button" />
+        android:background="@drawable/rounded_button_dark"
+        android:elevation="2dp"
+        android:paddingVertical="16dp"
+        android:text="@string/login"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textColorLink="#8E2323"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/register"
-        android:layout_width="match_parent"
+        android:layout_width="301dp"
         android:layout_height="wrap_content"
-        android:text="Register"
-        android:backgroundTint="@color/secondary"
+        android:background="@drawable/rounded_button_light"
+        android:elevation="2dp"
+        android:paddingVertical="16dp"
+        android:text="@string/register"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </LinearLayout>
