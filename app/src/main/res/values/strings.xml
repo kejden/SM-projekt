@@ -16,4 +16,7 @@
     <string name="swap_first_for_last">Swap first for last</string>
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
+
+    <string name="login">Login</string>
+    <string name="register">Register</string>
 </resources>

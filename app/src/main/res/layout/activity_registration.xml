@@ -1,69 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistrationActivity"
     android:orientation="vertical"
-    android:gravity="center">
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:padding="24dp"
+    tools:context=".RegistrationActivity">
+
     <EditText
         android:id="@+id/name"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="Name"
-        android:padding="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_input"
-        android:layout_marginBottom="16dp" />
+        android:elevation="1dp"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:textColor="#212121"
+        android:textColorHint="#9E9E9E"
+        android:textSize="16sp" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:elevation="1dp"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp">
+        android:orientation="horizontal">
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:buttonTint="#212121"
             android:text="Male"
-            android:buttonTint="@color/primary" />
+            android:textColor="#212121"
+            android:textColorHint="#9E9E9E"
+            android:textSize="16sp" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:buttonTint="#212121"
             android:text="Female"
-            android:buttonTint="@color/primary"
-            android:layout_marginStart="16dp" />
+            android:textColor="#212121"
+            android:textColorHint="#9E9E9E"
+            android:textSize="16sp" />
     </RadioGroup>
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:padding="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_input"
-        android:layout_marginBottom="16dp" />
+        android:elevation="1dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:textColor="#212121"
+        android:textColorHint="#9E9E9E"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:padding="16dp"
-        android:background="@drawable/rounded_input"
         android:layout_marginBottom="24dp"
-        android:inputType="textPassword" />
+        android:background="@drawable/rounded_input"
+        android:elevation="1dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="14dp"
+        android:textColor="#212121"
+        android:textColorHint="#9E9E9E"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/register"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button_dark"
+        android:elevation="2dp"
+        android:paddingVertical="16dp"
         android:text="Register"
-        android:backgroundTint="@color/primary"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
-        android:padding="12dp"
-        android:background="@drawable/rounded_button" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
 </LinearLayout>
