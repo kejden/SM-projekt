@@ -45,6 +45,8 @@
             android:exported="true" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity
+            android:name=".GalleryActivity" />
     </application>
 
 </manifest>

@@ -3,4 +3,15 @@
     <style name="LogoutMenuItem">
         <item name="android:textColor">@android:color/holo_red_light</item>
     </style>
+    <style name="RoundedEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/edittext_background</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="ProfileButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
 </resources>

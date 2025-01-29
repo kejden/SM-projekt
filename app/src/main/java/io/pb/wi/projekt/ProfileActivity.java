@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
+    static final int PICK_IMAGE_REQUEST = 1;
     private ImageView[] profileImageViews = new ImageView[4];
     private List<Uri> imageUris = new ArrayList<>();
     private FirebaseAuth mAuth;
@@ -89,14 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void addImage(View view) {
-        if (imageUris.size() < 4) {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(intent, PICK_IMAGE_REQUEST);
-        } else {
-            Toast.makeText(this, "Możesz dodać maksymalnie 4 zdjęcia", Toast.LENGTH_SHORT).show();
-        }
+        startActivity(new Intent(this, GalleryActivity.class));
     }
 
     @Override
