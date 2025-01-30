@@ -8,12 +8,15 @@ public class User {
     private static final AtomicLong counter = new AtomicLong(0);
 
     private final long id;
+
+    private final String user_id;
     private final String name;
     private final int age;
     private final String location;
     private final List<String> profileUrls;
 
-    public User(String name, int age, String location, List<String> profileUrls) {
+    public User(String name, int age, String location, List<String> profileUrls, String user_id) {
+        this.user_id = user_id;
         this.id = counter.getAndIncrement();
         this.name = name;
         this.age = age;
@@ -27,6 +30,10 @@ public class User {
 
     public long getId() {
         return id;
+    }
+
+    public String getUser_id() {
+        return user_id;
     }
 
     public String getName() {

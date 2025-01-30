@@ -8,6 +8,8 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -79,9 +81,31 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
 
     @Override
     public void onCardSwiped(Direction direction) {
-        Log.d("CardStackView", "onCardSwiped: p = " + manager.getTopPosition() + ", d = " + direction);
-        if (manager.getTopPosition() == adapter.getItemCount() - 5) {
-            paginate();
+        int topPosition = manager.getTopPosition();
+        User swipedUser = adapter.getUsers().get(topPosition - 1);
+
+        if (direction == Direction.Right) {
+            usersDb.child(swipedUser.getUser_id()).child("connections")
+                    .child("yeps").child(currentUId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        usersDb.child(currentUId).child("connections")
+                                .child("matches").child(swipedUser.getUser_id()).setValue(true);
+                        usersDb.child(swipedUser.getUser_id())
+                                .child("connections").child("matches").child(currentUId).setValue(true);
+                    } else {
+                        usersDb.child(currentUId).child("connections")
+                                .child("yeps").child(swipedUser.getUser_id()).setValue(true);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        } else if (direction == Direction.Left) {
+            usersDb.child(currentUId).child("connections").child("nopes").child(swipedUser.getUser_id()).setValue(true);
         }
     }
 
@@ -122,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
                 logout();
             } else if (itemId == R.id.profile) {
                 Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            } else if (itemId == R.id.matches) {
+                Intent intent = new Intent(MainActivity.this, MatchesActivity.class);
                 startActivity(intent);
             }
             drawerLayout.closeDrawers();
@@ -172,31 +199,44 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.child("sex").getValue() != null) {
-                    if (dataSnapshot.exists() &&
-                            !dataSnapshot.child("connections").child("nope").hasChild(currentUId) &&
-                            !dataSnapshot.child("connections").child("yeps").hasChild(currentUId) &&
-                            dataSnapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
+                    String userId = dataSnapshot.getKey();
 
-                        String userId = dataSnapshot.getKey();
-                        String name = dataSnapshot.child("name").getValue(String.class);
-                        Integer age = dataSnapshot.child("age").getValue(Integer.class);
-                        String location = dataSnapshot.child("location").getValue(String.class);
+                    DatabaseReference currentUserConnectionsRef = usersDb.child(currentUId).child("connections");
+                    currentUserConnectionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot currentUserConnectionsSnapshot) {
+                            boolean hasSwiped = currentUserConnectionsSnapshot.child("yeps").hasChild(userId) ||
+                                    currentUserConnectionsSnapshot.child("nopes").hasChild(userId);
 
-                        List<String> profileUrls = new ArrayList<>();
-                        for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                            String key = childSnapshot.getKey();
-                            if (key != null && key.startsWith("profileImageUrl")) {
-                                String photoUrl = childSnapshot.getValue(String.class);
-                                if (photoUrl != null && !photoUrl.isEmpty() && !photoUrl.equals("default")) {
-                                    profileUrls.add(photoUrl);
+                            boolean isOppositeSex = dataSnapshot.child("sex").getValue().toString().equals(oppositeUserSex);
+
+                            if (!hasSwiped && isOppositeSex) {
+                                String name = dataSnapshot.child("name").getValue(String.class);
+                                Integer age = dataSnapshot.child("age").getValue(Integer.class);
+                                String location = dataSnapshot.child("location").getValue(String.class);
+
+                                List<String> profileUrls = new ArrayList<>();
+                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                    String key = childSnapshot.getKey();
+                                    if (key != null && key.startsWith("profileImageUrl")) {
+                                        String photoUrl = childSnapshot.getValue(String.class);
+                                        if (photoUrl != null && !photoUrl.isEmpty() && !photoUrl.equals("default")) {
+                                            profileUrls.add(photoUrl);
+                                        }
+                                    }
                                 }
+
+                                User user = new User(name, age, location, profileUrls, userId);
+                                adapter.getUsers().add(user);
+                                adapter.notifyDataSetChanged();
                             }
                         }
 
-                        User user = new User(name, age, location, profileUrls);
-                        adapter.getUsers().add(user);
-                        adapter.notifyDataSetChanged();
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.e("FirebaseError", "Błąd podczas pobierania connections: " + databaseError.getMessage());
+                        }
+                    });
                 }
             }
 
@@ -275,6 +315,4 @@ public class MainActivity extends AppCompatActivity implements CardStackListener
         }
     }
 
-    private void paginate() {
-    }
 }

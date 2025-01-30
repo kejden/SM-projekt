@@ -53,7 +53,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     private static final int LOCATION_UPDATE_INTERVAL = 10000;
     private static final int FASTEST_LOCATION_INTERVAL = 5000;
     private static final int REQUEST_CHECK_SETTINGS = 2;
-    private static final int LOCATION_TIMEOUT = 30000; // 30 sekund
+    private static final int LOCATION_TIMEOUT = 30000;
     private Handler locationTimeoutHandler;
 
     @Override
@@ -257,7 +257,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     private void showProgress(String message) {
-        // Możesz dodać ProgressDialog lub zmienić stan przycisku
         getLocationButton.setEnabled(false);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }

@@ -95,19 +95,16 @@ public class GalleryActivity extends AppCompatActivity {
         imagesGrid.requestLayout();
 
 
-        // Handle empty state
         if (imageUrls.isEmpty() && imageUris.isEmpty()) {
             View emptyView = getLayoutInflater().inflate(R.layout.empty_gallery_state, imagesGrid, false);
             imagesGrid.addView(emptyView);
             return;
         }
 
-        // Display existing images from URLs
         for (String url : imageUrls) {
             addImageToGrid(url, true);
         }
 
-        // Display newly selected images from URIs
         for (Uri uri : imageUris) {
             addImageToGrid(uri.toString(), false);
         }
@@ -169,7 +166,6 @@ public class GalleryActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<String> remainingUrls = new ArrayList<>();
 
-                // Collect remaining URLs
                 for (int i = 0; i < MAX_IMAGES; i++) {
                     String url = snapshot.child("profileImageUrl" + i).getValue(String.class);
                     if (url != null && !url.equals(deletedUrl) && !url.equals("default")) {
@@ -177,7 +173,6 @@ public class GalleryActivity extends AppCompatActivity {
                     }
                 }
 
-                // Reset all image slots
                 for (int i = 0; i < MAX_IMAGES; i++) {
                     String value = (i < remainingUrls.size()) ? remainingUrls.get(i) : "default";
                     userDb.child("profileImageUrl" + i).setValue(value);

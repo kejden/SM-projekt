@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/profile"
         android:title="@string/profile"
-        android:visible="true"
-        />
+        android:visible="true" />
+
+    <item
+        android:id="@+id/matches"
+        android:title="@string/matches"
+        android:visible="true" />
 
     <item
         android:id="@+id/space"

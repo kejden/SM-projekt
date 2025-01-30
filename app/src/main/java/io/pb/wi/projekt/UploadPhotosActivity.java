@@ -81,7 +81,7 @@ public class UploadPhotosActivity extends AppCompatActivity {
             if (i < imageUris.size()) {
                 imageViews[i].setImageURI(imageUris.get(i));
             } else {
-                imageViews[i].setImageResource(R.drawable.placeholder); // Domyślna ikona
+                imageViews[i].setImageResource(R.drawable.placeholder);
             }
         }
     }
@@ -112,7 +112,7 @@ public class UploadPhotosActivity extends AppCompatActivity {
 
             if (task.isSuccessful()) {
                 List<Uri> downloadUris = new ArrayList<>();
-                for (Object obj : task.getResult()) {  // Ręczne rzutowanie elementów
+                for (Object obj : task.getResult()) {
                     if (obj instanceof Uri) {
                         downloadUris.add((Uri) obj);
                     }

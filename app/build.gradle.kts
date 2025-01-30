@@ -35,7 +35,7 @@ android {
 
 dependencies {
     implementation("com.github.yuyakaido:CardStackView:v2.3.4")
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 
     implementation(platform("com.google.firebase:firebase-bom:33.8.0"))
     implementation("com.google.firebase:firebase-analytics")

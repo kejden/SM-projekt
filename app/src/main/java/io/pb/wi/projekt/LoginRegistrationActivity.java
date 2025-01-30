@@ -18,7 +18,6 @@ public class LoginRegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login_registration);
 
         bLogin = (Button) findViewById(R.id.login);
@@ -29,8 +28,6 @@ public class LoginRegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginRegistrationActivity.this, LoginActivity.class);
                 startActivity(intent);
-//                finish();
-//                return;
             }
         });
 
@@ -39,8 +36,6 @@ public class LoginRegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginRegistrationActivity.this, RegistrationActivity.class);
                 startActivity(intent);
-//                finish();
-//                return;
             }
         });
     }

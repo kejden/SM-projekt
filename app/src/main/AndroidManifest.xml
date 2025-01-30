@@ -31,6 +31,9 @@
             android:name=".RegistrationActivity"
             android:exported="true" />
         <activity
+            android:name=".MatchesActivity"
+            android:exported="true" />
+        <activity
             android:name=".CompleteProfileActivity"
             android:exported="true" />
         <activity

@@ -56,7 +56,6 @@
                             if (!task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, "Sign in error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             } else {
-                                // Sprawdź, czy użytkownik ma uzupełnione dane
                                 String userId = mAuth.getCurrentUser().getUid();
                                 DatabaseReference userDb = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
 
@@ -64,15 +63,12 @@
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists()) {
-                                            // Sprawdź, czy użytkownik uzupełnił już profil
                                             Boolean profileCompleted = dataSnapshot.child("profileCompleted").getValue(Boolean.class);
                                             if (profileCompleted == null || !profileCompleted) {
-                                                // Przekieruj do aktywności uzupełnienia danych
                                                 Intent intent = new Intent(LoginActivity.this, CompleteProfileActivity.class);
                                                 startActivity(intent);
                                                 finish();
                                             } else {
-                                                // Przekieruj do głównej aktywności
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 startActivity(intent);
                                                 finish();
